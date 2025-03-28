@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="{{ url_for('static',filename = 'css/sales_A.css') }}">
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Replace with a relevant data analysis icon -->
+            <img src="static/da1.jpg" alt="Data Analysis Logo">
+        </div>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <h1>Sales Analysis</h1>
+    
+    <div class="container">
+        <div class="left-panel">
+            <form id="plot_form">
+                <label for="feature1">Select Feature 1:</label>
+                <select id="feature1" name="feature1" required onchange="updatePlotOptions()">
+                    {% for feature in results.columns %}
+                    <option value="{{ feature }}">{{ feature }}</option>
+                    {% endfor %}
+                </select>
+                <div class="p" id="categoryf1"></div>
+
+                <label for="feature2">Select Feature 2 (optional):</label>
+                <select id="feature2" name="feature2" onchange="updatePlotOptions()">
+                    <option value="">None</option>
+                    {% for feature in results.columns %}
+                    <option value="{{ feature }}">{{ feature }}</option>
+                    {% endfor %}
+                </select>
+                <div class="p" id="categoryf2"></div>
+
+                <label for="plot_type">Select Plot Type:</label>
+                <select id="plot_type" name="plot_type" required>
+                    <!-- Options populated dynamically by JavaScript -->
+                </select>
+
+                <button type="button" id="generate_plot">Generate Plot</button>
+                <div class="extra-buttons">
+                    <!-- <button type="button" onclick="window.location.href='/'">Go Back Home</button> -->
+                    <button type="reset" style="margin-right: 20px;">Reset</button>
+                    <button type="button" onclick="window.location.href='/download_report'">Download Report</button>
+                </div>
+            </form>
+        </div>
+        
+        <div class="right-panel">
+            <div id="plot"></div>
+            <div id="plot_description"></div>
+
+            <div class="observation-section">
+                <label for="observation">Write your observation:</label>
+                <textarea id="observation" rows="4" placeholder="Enter your observation here..."></textarea>
+                <button type="button" id="save_observation">Save Observation</button>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        const columnTypes = {{ results.column_types | tojson }};
+        // const columnTypes = JSON.parse('{{ results.column_types | tojson }}');
+        const plotTypeSelect = document.getElementById('plot_type');
+        const feature1Select = document.getElementById('feature1');
+        const feature2Select = document.getElementById('feature2');
+        const cat1=document.getElementById("categoryf1");
+        const cat2=document.getElementById("categoryf2");
+
+        function updatePlotOptions() {
+            plotTypeSelect.innerHTML = '';
+            const feature1 = feature1Select.value;
+            const feature2 = feature2Select.value;
+            const feature1Type = columnTypes[feature1];
+            const feature2Type = feature2 ? columnTypes[feature2] : null;
+
+            if (feature2) {  // Two features selected
+                if (feature1Type === 'categorical' && feature2Type === 'categorical') {
+                    plotTypeSelect.innerHTML = `
+                        <option value="stacked-bar">Stacked Bar Chart</option>
+                        <option value="heatmap">Heatmap</option>
+                    `;
+                } else if (feature1Type === 'numerical' && feature2Type === 'numerical') {
+                    plotTypeSelect.innerHTML = `
+                        <option value="2d-histogram">2D Histogram</option>
+                        <option value="scatter">Scatter Plot</option>
+                        <option value="line">Line Plot</option>
+                    `;
+                } else {
+                    plotTypeSelect.innerHTML = `
+                        <option value="box">Box Plot</option>
+                        <option value="violin">Violin Plot</option>
+                    `;
+                }
+                cat1.innerHTML=feature1Type
+                cat2.innerHTML=feature2Type
+            } else {  // Single feature selected
+                if (feature1Type === 'categorical') {
+                    plotTypeSelect.innerHTML = `
+                        <option value="pie">Pie Chart</option>
+                        <option value="bar">Bar Chart</option>
+                    `;
+                } else if (feature1Type === 'numerical') {
+                    plotTypeSelect.innerHTML = `
+                        <option value="histogram">Histogram</option>
+                        <option value="box">Box Plot</option>
+                        <option value="violin">Violin Plot</option>
+                    `;
+                }
+                cat1.innerHTML=feature1Type
+            }
+        }
+
+        document.getElementById('generate_plot').onclick = function() {
+            const feature1 = feature1Select.value;
+            const feature2 = feature2Select.value;
+            const plotType = plotTypeSelect.value;
+
+            fetch('/generate_plot', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ feature1, feature2, plot_type: plotType })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const plot_json_str=data.plot;
+                const formattedDescription = data.description.replace(/\n/g, "\n"); 
+
+                // Display plot
+                const plot_json = JSON.parse(plot_json_str);
+                const plotDiv = document.getElementById('plot');
+                plotDiv.innerHTML = '';
+                Plotly.newPlot(plotDiv, plot_json.data, plot_json.layout);
+
+                // Display description below the plot
+                const descriptionDiv=document.getElementById('plot_description');
+                descriptionDiv.textContent=formattedDescription;
+            });
+        };
+
+        // Save Observation
+        document.getElementById('save_observation').onclick = function() {
+            const observation = document.getElementById('observation').value;
+            const plotDescription = document.getElementById('plot_description').value;
+
+            // Convert plot to PNG and get the base64 string
+            Plotly.toImage(document.getElementById('plot'), { format: 'png' })
+                .then((imgData) => {
+                    // Send observation text and plot image to the backend
+                    fetch('/save_observation', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            observation: observation,
+                            plot_description: plotDescription, 
+                            plot_image: imgData  // Base64 encoded image
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            alert("Observation and plot image saved successfully!");
+                            document.getElementById('observation').value = '';  // Clear text area
+                            document.getElementById('plot_description_input').value = '';
+                        } else {
+                            alert("Failed to save observation.");
+                        }
+                    });
+                })
+                .catch((error) => {
+                    console.error("Error converting plot to image:", error);
+                });
+        };
+    </script>
+</body>
+</html>
+

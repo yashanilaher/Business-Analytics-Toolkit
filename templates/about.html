@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About Us Page</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;500;700;900&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{  url_for('static',filename='css/about.css') }}">
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+
+<body>
+    <header class="flex items-center justify-between px-10 py-3 border-b border-[#EEEFF2] bg-[#2c3e50]">
+        <div class="flex items-center gap-4 text-[#F9FAFA]">
+            <div class="w-4 h-4">
+                <svg viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor" />
+                </svg>
+            </div>
+            <h2 class="text-lg font-bold tracking-tight">Data Trio</h2>
+        </div>
+
+        <div class="flex items-center gap-8">
+            <nav class="flex items-center gap-9">
+                <a href="/home" class="text-sm font-medium text-[#F9FAFA]">Home</a>
+            </nav>
+            <button class="bg-[#607AFB] text-[#F9FAFA] px-4 py-2 rounded font-bold text-sm min-w-[84px]">
+                About Us
+            </button>
+        </div>
+    </header>
+
+    <main class="px-10 py-8">
+        <div class="max-w-7xl mx-auto">
+            <h1 class="section-title text-center pb-4">About Us</h1>
+            <p class="description-text text-center mb-12 max-w-3xl mx-auto">We are a team focused on empowering e-commerce businesses with data-driven insights. Our toolkit combines advanced analytics and machine learning techniques to simplify data, enabling smarter decision-making and driving business growth.</p>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Akshay Card -->
+                <div class="card">
+                    <div class="profile-image-container">
+                        <img src="static/142201018.jpg" alt="Akshay Sanjay Jadhav" class="profile-image">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="team-title text-lg">Akshay Sanjay Jadhav</h3>
+                        <p class="team-subtitle text-sm">142201018</p>
+                        <p class="description-text mt-4">Customer Segmentation Using RFM</p>
+                        <p class="description-text mt-4">Data Analyst @ IIT palakkad</p>
+                    </div>
+                </div>
+
+                <!-- Yash Card -->
+                <div class="card">
+                    <div class="profile-image-container">
+                        <img src="static/pass_port.png" alt="Yash Anil Aher" class="profile-image">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="team-title text-lg">Yash Anil Aher</h3>
+                        <p class="team-subtitle text-sm">142201035</p>
+                        <p class="description-text mt-4">Creating detailed visualizations to explore and interpret sales trends.</p>
+                        <p class="description-text mt-4">Data Analyst @ IIT palakkad</p>
+                    </div>
+                </div>
+
+                <!-- Vaibhav Card -->
+                <div class="card">
+                    <div class="profile-image-container">
+                        <img src="static/142201015.jpg" alt="Vaibhav Yadav" class="profile-image">
+                    </div>
+                    <div class="card-body">
+                        <h3 class="team-title text-lg">Vaibhav Yadav</h3>
+                        <p class="team-subtitle text-sm">142201015</p>
+                        <p class="description-text mt-4">Association Rule Mining</p>
+                        <p class="description-text mt-4">Data Analyst @ IIT palakkad</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <h2 class="text-xl font-semibold">Follow Us</h2>
+                <div class="social-links">
+                    <a href="https://twitter.com" class="social-icon">T</a>
+                    <a href="https://linkedin.com" class="social-icon">L</a>
+                    <a href="https://github.com" class="social-icon">G</a>
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

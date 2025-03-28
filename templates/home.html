@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis Core Page</title>
+    <link rel="stylesheet" href="{{  url_for('static',filename='css/home.css') }}">
+    
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Replace with a relevant data analysis icon -->
+            <img src="static/da1.jpg" alt="Data Analysis Logo">
+        </div>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <!-- Header Section -->
+    <header class="tt">
+        <h1>Data Analysis Solutions</h1>
+        <p>Empowering your business with insightful data analytics to drive informed decisions and sustainable growth.</p>
+    </header>
+
+    <!-- Buttons and Cards Section -->
+    <div class="buttons-cards-container">
+        <!-- Sales and Revenue Analysis -->
+        <div class="button-card-wrapper">
+            <a href="/sales" class="button">Sales and Revenue Analysis</a>
+            <div class="card" id="sales">
+                <img src="/static/sales.jpeg" alt="Sales Analysis">
+                <h3>Sales and Revenue Analysis</h3>
+                <p>Gain comprehensive insights into your sales performance and revenue streams. Identify trends, measure KPIs, and make data-driven decisions to boost profitability.</p>
+            </div>
+        </div>
+
+        <!-- Customer Analytics -->
+        <div class="button-card-wrapper">
+            <a href="/customer" class="button">Customer Analytics</a>
+            <div class="card" id="customer">
+                <img src="/static/customer.jpeg" alt="Customer Analytics"> <!-- Corrected Image Source -->
+                <h3>Customer Analytics</h3>
+                <p>Understand your customers' behaviors and preferences. Leverage detailed analytics to enhance customer satisfaction, retention, and targeted marketing strategies.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Data Analysis Solutions. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

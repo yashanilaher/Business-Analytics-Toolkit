@@ -1,0 +1,106 @@
+body {
+    font-family: 'Work Sans', sans-serif;
+    background-color: #111118;
+    color: white;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2.5rem;
+    border-bottom: 1px solid #292938;
+}
+.logo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.logo svg {
+    width: 1rem;
+    height: 1rem;
+}
+.header-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+.header-button {
+    background-color: #292938;
+    border: none;
+    color: white;
+    padding: 0.5rem;
+    border-radius: 0.75rem;
+    cursor: pointer;
+}
+.avatar {
+    width: 2.5rem;
+    height: 2.5rem;
+    border-radius: 50%;
+    background-image: url("https://cdn.usegalileo.ai/sdxl10/9047eaab-60b5-4f94-bf68-6bcb2520590a.png");
+    background-size: cover;
+}
+main {
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+}
+.login-form {
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+h1 {
+    font-size: 1.375rem;
+    margin-bottom: 0.5rem;
+}
+.input-group {
+    margin-bottom: 1rem;
+}
+label {
+    display: block;
+    text-align: left;
+    margin-bottom: 0.5rem;
+}
+input[type="email"],
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #3c3c53;
+    background-color: #1c1c26;
+    color: white;
+    border-radius: 0.75rem;
+}
+.remember-me {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+.remember-me input {
+    margin-right: 0.5rem;
+}
+button[type="submit"] {
+    width: 100%;
+    padding: 0.75rem;
+    background-color: #1919e6;
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    font-weight: bold;
+}
+.forgot-password {
+    color: #9d9db8;
+    text-decoration: underline;
+    margin-top: 1rem;
+    display: inline-block;
+}
+.regis{
+    margin-top:30px;    
+}

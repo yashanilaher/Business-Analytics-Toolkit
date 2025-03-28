@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Analysis</title>
+    <link rel="stylesheet" href="{{  url_for('static',filename='css/customer.css') }}">
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Customer Analysis</h1>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Upload Form Section -->
+
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-error{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <div class="upload-form">
+            <h2>Upload Customer Data CSV</h2>
+            <form action="{{ url_for('customer') }}" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv" required>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+
+
+        <!-- displaying first 20 rows -->
+        {% if results %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    {% for column in results.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results.rows[:20] %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+        <!-- Association Mining Section -->
+        <div class="association-mining">
+            <!-- Left Side: Image, Description, Button -->
+            <div class="association-left">
+                <img src="static/apriori.png" alt="Association Mining Icon">
+                <h3>Association Rule Mining</h3>
+                <p>Identify frequent patterns and relationships in customer purchase data for targeted marketing.</p>
+                
+                <!-- Run Analysis Button as a form submission -->
+                <form action="{{ url_for('ARM') }}">
+                    <button type="submit" name="run_analysis" class="btn">Discover Purchase Patterns</button>
+                </form>
+            </div>
+
+            <!-- Right Side: Customer Segmentation -->
+            <div class="segmentation-right">
+                <img src="static/customer_seg.jpeg" alt="Association Mining Icon">
+                <h3>Customer Segmentation</h3>
+                <p>Group customers into different segments to understand their unique behaviors and preferences.</p>
+                
+                <form action="{{ url_for('customer_segmentation') }}" >
+                    <button type="submit" name="run_segmentation" class="btn">Reveal Market Segments</button>
+                </form>
+            </div>
+
+        </div>
+
+        <!-- Call to Action Button -->
+        <div class="cta">
+            <a href="{{ url_for('home') }}" class="awesome-button">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Data Analysis Solutions. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

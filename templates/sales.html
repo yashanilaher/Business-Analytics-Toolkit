@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sales and Revenue Analysis</title>
+    <link rel="stylesheet" href="{{url_for('static',filename='css/sales.css')}}">
+    
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <h1>Sales and Revenue Analysis</h1>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Flash Messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash-message {% if category == 'success' %}flash-success{% else %}flash-error{% endif %}">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <!-- Upload Form Section -->
+        <div class="upload-form">
+            <h2>Upload Your Sales CSV File</h2>
+            <form action="{{ url_for('sales') }}" method="POST" enctype="multipart/form-data">
+                <input type="file" name="file" accept=".csv" required>
+                <input type="submit" value="Upload">
+            </form>
+        </div>
+
+        <div class="datset">
+            {% if results %}
+                <h1>The Dataset Contains {{ results.columns|length }} rows and {{ results.rows|length }} instances</h1>
+            {% endif %}
+        </div> 
+
+        <!-- displaying first 20 rows -->
+        {% if results %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    {% for column in results.columns %}
+                        <th>{{ column }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for row in results.rows[:20] %}
+                    <tr>
+                        {% for cell in row %}
+                            <td>{{ cell }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% endif %}
+
+
+        <!-- Introduction Section -->
+        <div class="intro">
+            <img src="static/S1.jpeg" alt="Sales Analysis">
+            <div class="intro-text">
+                <h2>Unlock Your Sales Potential</h2>
+                <p>Our comprehensive sales and revenue analysis tools empower your business to understand sales trends, identify key performance indicators, and make data-driven decisions to enhance profitability and drive sustainable growth.</p>
+            </div>
+        </div>
+
+        <!-- Awesome "Get to Analysis" Button -->
+        <div class="cta">
+            <a href="{{ url_for('Visuals') }}" class="awesome-button">InsightCanvas</a>
+            <a href="{{ url_for('Analysis') }}" class="awesome-button">Analysis</a>
+        </div>
+
+        <!-- Features Section -->
+        <div class="features">
+            <!-- Feature 1 -->
+            <div class="feature">
+                <img src="static/trend.png" alt="Trend Analysis Icon">
+                <h3>Trend Analysis</h3>
+                <p>Identify and analyze sales trends over time to understand performance patterns and forecast future sales.</p>
+            </div>
+            <!-- Feature 2 -->
+            <div class="feature">
+                <img src="static/revenue.png" alt="Revenue Tracking Icon">
+                <h3>Revenue Tracking</h3>
+                <p>Monitor your revenue streams in real-time, enabling timely adjustments and strategic planning.</p>
+            </div>
+            <!-- Feature 3 -->
+            <div class="feature f1">
+                <img src="static/third.png" alt="Customer Insights Icon">
+                <h3>Customer Insights</h3>
+                <p>Gain deep insights into customer purchasing behavior to tailor your sales strategies effectively.</p>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="cta">
+            <a href="{{ url_for('home') }}">Back to Home</a>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 Data Analysis Solutions. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

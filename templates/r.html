@@ -1,0 +1,9 @@
+<!-- Plot Output -->
+<div class="plot-output">
+    <h3>Sunburst Plot of Rules</h3>
+    {% if plot_html %}
+        {{ plot_html|safe }}
+    {% else %}
+        <p>No plot generated. Please run the analysis.</p>
+    {% endif %}
+</div>

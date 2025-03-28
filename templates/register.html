@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Insight - Register</title>
+    <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{  url_for('static',filename='css/register.css')  }}">
+
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-5-9h10v2H7v-2z"/>
+            </svg>
+            <h2>Data Insight</h2>
+        </div>
+        <a href="/login"><button class="sign-in-btn">Sign in</button></a>
+    </header>
+    <main>
+        <div class="form-container">
+            {% if error %}
+                <p style="color: red;">{{ error }}</p>
+            {% endif %}
+            <h1>Create a Data Insight account</h1>
+            <form action="/register" method="POST">
+                <div class="input-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" placeholder="Enter your full name" required>
+                </div>
+                <div class="input-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" name="password" placeholder="Choose a password" required>
+                </div>
+                <div class="input-group">
+                    <label for="email">Enter your work email</label>
+                    <input type="email" id="email" name="email" placeholder="you@example.com" required>
+                    <p class="hint">We'll send you a code to verify your email address</p>
+                </div>
+                <div class="two-col">
+                    <div class="input-group">
+                        <label for="phone">Phone number</label>
+                        <input type="tel" id="phone" placeholder="(123) 456-7890" required>
+                    </div>
+                    <div class="input-group">
+                        <label for="country">Country</label>
+                        <input type="text" id="country" placeholder="United States" required>
+                    </div>
+                </div>
+                <button type="submit">Continue</button>
+            </form>
+        </div>
+    </main>
+    <footer>
+        <p>By creating an account, you agree to Data Insight's Terms of Service and acknowledge that you have read the Privacy Policy.</p>
+    </footer>
+</body>
+</html>

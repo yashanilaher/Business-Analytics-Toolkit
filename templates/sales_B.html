@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Analysis Dashboard</title>
+    <link rel="stylesheet" href="{{ url_for('static',filename='css/sales_B.css')}}">
+    
+</head>
+<body>
+    <!-- Navbar Section -->
+    <nav class="navbar">
+        <div class="logo">
+            <!-- Replace with a relevant data analysis icon -->
+            <img src="static/da1.jpg" alt="Data Analysis Logo">
+        </div>
+        <ul>
+            <li><a href="/home">Home</a></li>
+            <li><a href="/about">About</a></li>
+            <li><a href="/contact">Contact</a></li>
+        </ul>
+    </nav>
+
+    <div class="container">
+        <!-- Sidebar with buttons -->
+        <div class="sidebar">
+            <h2>Data Analysis</h2>
+            <button onclick="showResult('correlation')">Correlation Analysis</button>
+            <button onclick="showResult('summary')">Summary Statistics</button>
+            <button onclick="showResult('time_series')">Time Series Analysis</button>
+            <div id="timeSeriesInputs" style="display:none;">
+                <label for="timeSeriesFeature1">Select Date/Time Column:</label>
+                <select id="timeSeriesFeature1"></select>
+                <label for="timeSeriesFeature2">Select Value Column:</label>
+                <select id="timeSeriesFeature2"></select>
+                <label for="frequency">Enter Frequency (in days):</label>
+                <input type="number" id="frequency" min="1" placeholder="e.g., 7">
+                <button onclick="generateTimeSeries()">Generate Time Series Plot</button>
+            </div>
+            <!-- <button onclick="showResult('distribution')">Distribution Analysis</button>
+            <button onclick="showResult('outliers')">Outliers Detection</button>
+            <button onclick="showResult('regression')">Regression Analysis</button> -->
+        </div>
+
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <h3>Analysis Results</h3>
+            <div id="result" class="result">
+                Click an option on the left to see the analysis result here.
+            </div>
+        </div>
+    </div>
+
+    <!-- Load Plotly.js library -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+
+    <!-- JavaScript to handle button clicks and display content -->
+    <script>
+        // const columns = JSON.parse('{{ results.col | tojson }}');
+
+        function showResult(analysisType) {
+            let resultDiv = document.getElementById('result');
+            switch(analysisType) {
+                case 'correlation':
+                    timeSeriesInputs.style.display = "none";
+                    resultDiv.innerHTML = "<h4>Correlation Analysis</h4><p>Loading correlation matrix...</p>";
+                    fetch('/correlation_matrix')
+                        .then(response => response.json())
+                        .then(data => {
+                            // Clear the result div and add a placeholder for the plot
+                            resultDiv.innerHTML = "<h4 style='style=margin-bottom:10px;' >Correlation Analysis</h4><div id='correlationMatrix'></div>";
+
+                            // Render the Plotly chart using the JSON data from the backend
+                            const figData = JSON.parse(data.plot); // Parse JSON data
+                            Plotly.react('correlationMatrix', figData.data, figData.layout);
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            resultDiv.innerHTML = "<p>Failed to load correlation matrix.</p>";
+                        });
+                        break;
+                case 'summary':
+                    timeSeriesInputs.style.display = "none";
+                    resultDiv.innerHTML = "<h4>Summary Statistics</h4><p>Loading summary statistics...</p>";
+                    fetch('/summary_statistics')
+                    .then(response => response.json())
+                    .then(data => {
+                        // Create a table to display summary statistics
+                        let tableHTML = "<table class='table table-bordered'><tr><th>Statistic</th>";
+                            // Add column names as headers
+                            for (let col in data) {
+                                tableHTML += `<th>${col}</th>`;
+                            }
+                            tableHTML += "</tr>";
+                            
+                        // Add each row of statistics
+                        const stats = ["count", "mean", "std", "min", "25%", "50%", "75%", "max"];
+                        stats.forEach(stat => {
+                            tableHTML += `<tr><td>${stat}</td>`;
+                            for (let col in data) {
+                                // Round each statistic value to 2 decimal places before adding it to the table
+                                let value = data[col][stat];
+                                if (typeof value === "number") {
+                                    value = value.toFixed(2);  // Round to 2 decimals
+                                }
+                                tableHTML += `<td>${value}</td>`;
+                            }
+                            tableHTML += "</tr>";
+                        });
+                        tableHTML += "</table>";
+
+                        resultDiv.innerHTML = tableHTML;
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        resultDiv.innerHTML = "<p>Failed to load summary statistics.</p>";
+                        populateColumns(document.getElementById("timeSeriesFeature1"));
+                        populateColumns(document.getElementById("timeSeriesFeature2"));
+                    });
+                    break;
+                case 'time_series':
+                    resultDiv.innerHTML = "<div id='timeSeriesPlot'></div>";
+                    timeSeriesInputs.style.display = "block";
+                    
+                    document.getElementById("timeSeriesFeature1").innerHTML = columns.map(col => `<option value="${col}">${col}</option>`).join('');
+                    document.getElementById("timeSeriesFeature2").innerHTML = columns.map(col => `<option value="${col}">${col}</option>`).join('');
+                    break;
+                // case 'distribution':
+                //     resultDiv.innerHTML = "<h4>Distribution Analysis</h4><p>Loading distribution data...</p>";
+                //     // Load distribution data here
+                //     break;
+                // case 'outliers':
+                //     resultDiv.innerHTML = "<h4>Outliers Detection</h4><p>Loading outliers data...</p>";
+                //     // Load outliers data here
+                //     break;
+                // case 'regression':
+                //     resultDiv.innerHTML = "<h4>Regression Analysis</h4><p>Loading regression data...</p>";
+                //     // Load regression data here
+                //     break;
+                default:
+                    resultDiv.innerHTML = "<p>Please select an analysis option.</p>";
+            }
+        }
+
+        function generateTimeSeries() {
+            const feature1 = document.getElementById("timeSeriesFeature1").value;
+            const feature2 = document.getElementById("timeSeriesFeature2").value;
+            const frequency = document.getElementById("frequency").value;
+
+            fetch('/time_series_analysis', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    feature1: feature1,
+                    feature2: feature2,
+                    frequency: frequency
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const plotDiv = document.getElementById("timeSeriesPlot");
+                plotDiv.innerHTML = "";  // Clear previous plot
+                const figData = JSON.parse(data.plot);
+                Plotly.newPlot(plotDiv, figData.data, figData.layout);
+                timeSeriesInputs.style.display = "none";
+                })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById("timeSeriesPlot").innerHTML = "<p>Failed to load time series plot.</p>";
+            });
+        }
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Segmentation</title>
+    <!-- Load Plotly from CDN -->
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <link rel="stylesheet" href="{{url_for('static',css/segmentation.css)}}">
+        
+</head>
+<body>
+    <header>
+        <h1>Customer Segmentation</h1>
+    </header>
+
+    <div class="container">
+        <!-- Input Form (Left) -->
+        <div class="form-container">
+            <h2>Select Columns Related To Below Titles For RFM Analysis</h2>
+            <form method="POST" action="{{ url_for('customer_segmentation') }}">
+                <div>
+                    <label for="customer_id">Customer ID:</label>
+                    <select name="customer_id" id="customer_id" required>
+                        {% for col in results.columns %}
+                            <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="invoice_date">Invoice Date:</label>
+                    <select name="invoice_date" id="invoice_date" required>
+                        {% for col in results.columns %}
+                            <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="quantity">Quantity:</label>
+                    <select name="quantity" id="quantity" required>
+                        {% for col in results.columns %}
+                            <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div>
+                    <label for="unit_price">Unit Price:</label>
+                    <select name="unit_price" id="unit_price" required>
+                        {% for col in results.columns %}
+                            <option value="{{ col }}">{{ col }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <button type="submit" class="btn">Generate Segmentation</button>
+
+                <!-- Download Report Button -->
+                <div class="cta">
+                    <a href="{{ url_for('download_report') }}" class="btn">Download Report</a>
+                </div>
+
+            </form>
+
+            {% if error %}
+                <div class="error">
+                    {{ error }}
+                </div>
+            {% endif %}
+        </div>
+
+        <!-- Plot Containers (Right) -->
+        {% if show_plots %}
+            <div class="plot-container">
+                <h3>Elbow Method Analysis</h3>
+                <div id="plot1" style="height: 500px;"></div>
+                <textarea id="observation1" placeholder="Write your observation here..." rows="4"></textarea>
+                <button class="btn" onclick="saveObservation(1)">Save Observation</button>
+            </div>
+
+            <div class="plot-container">
+                <h3>Silhouette Score Analysis</h3>
+                <div id="plot2" style="height: 500px;"></div>
+                <textarea id="observation2" placeholder="Write your observation here..." rows="4"></textarea>
+                <button class="btn" onclick="saveObservation(2)">Save Observation</button>
+            </div>
+
+            <div class="plot-container">
+                <h3>Customer Clusters</h3>
+                <div id="plot3" style="height: 500px;"></div>
+                <textarea id="observation3" placeholder="Write your observation here..." rows="4"></textarea>
+                <button class="btn" onclick="saveObservation(3)">Save Observation</button>
+            </div>
+
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    try {
+                        // Parse and render plots
+                        const plot1Data = JSON.parse('{{ plot1 | tojson }}');
+                        const plot2Data = JSON.parse('{{ plot2 | tojson }}');
+                        const plot3Data = JSON.parse('{{ plot3 | tojson }}');
+
+                        Plotly.newPlot('plot1', plot1Data.data, plot1Data.layout);
+                        Plotly.newPlot('plot2', plot2Data.data, plot2Data.layout);
+                        Plotly.newPlot('plot3', plot3Data.data, plot3Data.layout);
+                    } catch (error) {
+                        console.error('Error rendering plots:', error);
+                    }
+                });
+
+                function saveObservation(plotIndex) {
+                    const observation = document.getElementById(`observation${plotIndex}`).value;
+                    
+                    // Get the plot image as a Base64 encoded PNG using Plotly.toImage
+                    Plotly.toImage(document.getElementById(`plot${plotIndex}`), { format: 'png' })
+                        .then(function(plotImage) {
+                            // Send the data to the backend (Flask)
+                            fetch('/save_observation', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                                body: JSON.stringify({
+                                    plot_image: plotImage, // Base64 encoded image
+                                    observation: observation
+                                })
+                            }).then(response => response.json())
+                            .then(data => {
+                                alert('Observation saved successfully!');
+                            }).catch(error => {
+                                console.error('Error saving observation:', error);
+                            });
+                        })
+                        .catch(function(error) {
+                            console.error('Error converting plot to image:', error);
+                        });
+                }
+
+            </script>
+        {% endif %}
+
+        <div class="cta">
+            <a href="{{ url_for('home') }}" class="btn">Back to Home</a>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2024 Data Analysis Solutions. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>

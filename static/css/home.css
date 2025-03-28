@@ -1,0 +1,190 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f0f2f5;
+    color: #333;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 40px 20px;
+}
+
+/* Navbar Styling */
+.navbar {
+    display: flex;
+    background-color: #2c3e50;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 30px;
+    /* position: sticky; */
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 103%; /* Ensure navbar spans full width */
+    min-height: 80px; /* Set a minimum height to prevent shrinking */
+    margin-top: -40px;
+}
+
+.navbar .logo img {
+    height: 60px; /* Adjusted height for better alignment */
+    width: 60px; /* Adjusted width for better alignment */
+    transition: transform 0.3s ease;
+}
+
+.navbar .logo img:hover {
+    transform: scale(1.1);
+}
+
+.navbar ul {
+    list-style-type: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar ul li {
+    padding: 0 20px;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    color: #ffcc00;
+}
+
+/* Header Styling */
+.tt {
+    margin-bottom: 40px;
+    text-align: center;
+    margin-top: 20px;
+}
+
+.tt h1 {
+    font-size: 36px;
+    color: #2c3e50;
+    margin-bottom: 10px;
+}
+
+.tt p {
+    font-size: 18px;
+    color: #555;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Buttons and Cards Container */
+.buttons-cards-container {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    margin-bottom: 50px;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* Wrapper for each Button and Card */
+.button-card-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px; /* Match the card width */
+}
+
+/* Style for Anchor Buttons */
+.button-card-wrapper a.button {
+    display: inline-block;
+    background-color: #ffcc00;
+    text-decoration: none;
+    color: #333;
+    padding: 15px 25px;
+    font-size: 18px;
+    font-weight: bold;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.3s;
+    margin-bottom: 20px; /* Space between button and card */
+    text-align: center;
+    width: 100%;
+}
+
+.button-card-wrapper a.button:hover {
+    background-color: #e6b800;
+    transform: translateY(-3px);
+}
+
+/* Cards Styling */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    width: 100%;
+    padding: 20px;
+    text-align: left;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+.card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.card h3 {
+    font-size: 22px;
+    margin-bottom: 10px;
+    color: #2c3e50;
+}
+
+.card p {
+    font-size: 16px;
+    color: #555;
+}
+
+/* Smooth Scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Footer Styling */
+footer {
+    margin-top: 50px;
+    color: #888;
+    font-size: 14px;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .buttons-cards-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .button-card-wrapper {
+        width: 80%;
+        max-width: 300px;
+    }
+
+    .button-card-wrapper a.button {
+        width: 100%;
+    }
+}
